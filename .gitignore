@@ -1,0 +1,16 @@
+node_modules/
+dist/
+
+# Android — generated icons/splash (mipmap-*, drawable-*) ARE versioned
+# (npx capacitor-assets generate can redo them, but committing skips that
+# step in CI).
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/captures/
+android/.cxx/
+*.keystore
+*.jks
+
+.DS_Store

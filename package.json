@@ -1,0 +1,19 @@
+{
+  "name": "forvia-mobile",
+  "version": "1.0.0",
+  "description": "Forvia — native Android/iOS shell (Capacitor WebView over app.forvia.fit). No local build, no offline data: the app IS the live site, wrapped for the home screen.",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "scripts": {
+    "sync": "cap sync"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.6.8",
+    "@capacitor/core": "^7.6.8"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^7.6.8",
+    "typescript": "^5.9.3"
+  }
+}
