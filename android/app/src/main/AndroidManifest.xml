@@ -29,7 +29,20 @@
         </provider>
     </application>
 
+    <!-- Not required: lets the app install/run on a device with no camera at all (the
+         barcode scanner in Nutrition just won't offer itself there) rather than being
+         filtered out of installability by that hardware requirement. -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Without this, the web app's barcode scanner (navigator.mediaDevices.getUserMedia)
+         can never work: Capacitor's BridgeWebChromeClient.onPermissionRequest only forwards
+         a getUserMedia video-capture request into an Android runtime permission prompt for
+         a permission the manifest actually declares (see PermissionHelper.hasDefinedPermission
+         in @capacitor/android) — without this line there's no prompt to accept, ever, so the
+         camera silently never becomes available no matter what the user taps. -->
+    <uses-permission android:name="android.permission.CAMERA" />
 </manifest>
