@@ -45,4 +45,12 @@
          in @capacitor/android) — without this line there's no prompt to accept, ever, so the
          camera silently never becomes available no matter what the user taps. -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Same mechanism, for the coach marketplace's location picker (navigator.geolocation.
+         getCurrentPosition — "use my current location" auto-detect): BridgeWebChromeClient.
+         onGeolocationPermissionsShowPrompt only forwards a runtime prompt for
+         ACCESS_COARSE_LOCATION/ACCESS_FINE_LOCATION if the manifest declares them. Without
+         these, auto-detect just silently never resolves — the picker still works, the person
+         just has to type a city instead of tapping the locate button. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 </manifest>
