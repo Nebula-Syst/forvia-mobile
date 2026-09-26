@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Plays ic_forvia_logo_vector.xml's own "draw the outline, then resolve to solid" reveal —
+  same two-stage timing as the web boot screen's .logo-mark-svg.draw (index.css/LogoMark.jsx in
+  the main Forvia repo): each path's trimPathEnd 0→1 over 1050ms, staggered per shape via
+  startOffset (0/0/130/130/350/570/830ms — identical delays to the web version's own stagger), then
+  every path's fillAlpha 0→1 / strokeAlpha 1→0 together over 500ms starting at 1900ms (right
+  after the slowest shape finishes its own draw), so the whole mark settles solid at ~2400ms.
+  SplashActivity starts this on its ImageView and moves on to MainActivity once it's done.
+-->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:drawable="@drawable/ic_forvia_logo_vector">
+
+  <target android:name="lime1">
+    <aapt:attrib name="android:animation">
+      <set android:ordering="together">
+        <objectAnimator android:propertyName="trimPathEnd" android:duration="1050"
+            android:startOffset="0" android:valueFrom="0" android:valueTo="1"
+            android:interpolator="@android:interpolator/decelerate_cubic" />
+        <objectAnimator android:propertyName="fillAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="0" android:valueTo="1" />
+        <objectAnimator android:propertyName="strokeAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="1" android:valueTo="0" />
+      </set>
+    </aapt:attrib>
+  </target>
+
+  <target android:name="lime2">
+    <aapt:attrib name="android:animation">
+      <set android:ordering="together">
+        <objectAnimator android:propertyName="trimPathEnd" android:duration="1050"
+            android:startOffset="0" android:valueFrom="0" android:valueTo="1"
+            android:interpolator="@android:interpolator/decelerate_cubic" />
+        <objectAnimator android:propertyName="fillAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="0" android:valueTo="1" />
+        <objectAnimator android:propertyName="strokeAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="1" android:valueTo="0" />
+      </set>
+    </aapt:attrib>
+  </target>
+
+  <target android:name="lime3">
+    <aapt:attrib name="android:animation">
+      <set android:ordering="together">
+        <objectAnimator android:propertyName="trimPathEnd" android:duration="1050"
+            android:startOffset="130" android:valueFrom="0" android:valueTo="1"
+            android:interpolator="@android:interpolator/decelerate_cubic" />
+        <objectAnimator android:propertyName="fillAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="0" android:valueTo="1" />
+        <objectAnimator android:propertyName="strokeAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="1" android:valueTo="0" />
+      </set>
+    </aapt:attrib>
+  </target>
+
+  <target android:name="lime4">
+    <aapt:attrib name="android:animation">
+      <set android:ordering="together">
+        <objectAnimator android:propertyName="trimPathEnd" android:duration="1050"
+            android:startOffset="130" android:valueFrom="0" android:valueTo="1"
+            android:interpolator="@android:interpolator/decelerate_cubic" />
+        <objectAnimator android:propertyName="fillAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="0" android:valueTo="1" />
+        <objectAnimator android:propertyName="strokeAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="1" android:valueTo="0" />
+      </set>
+    </aapt:attrib>
+  </target>
+
+  <target android:name="lime5">
+    <aapt:attrib name="android:animation">
+      <set android:ordering="together">
+        <objectAnimator android:propertyName="trimPathEnd" android:duration="1050"
+            android:startOffset="350" android:valueFrom="0" android:valueTo="1"
+            android:interpolator="@android:interpolator/decelerate_cubic" />
+        <objectAnimator android:propertyName="fillAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="0" android:valueTo="1" />
+        <objectAnimator android:propertyName="strokeAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="1" android:valueTo="0" />
+      </set>
+    </aapt:attrib>
+  </target>
+
+  <target android:name="ink1">
+    <aapt:attrib name="android:animation">
+      <set android:ordering="together">
+        <objectAnimator android:propertyName="trimPathEnd" android:duration="1050"
+            android:startOffset="570" android:valueFrom="0" android:valueTo="1"
+            android:interpolator="@android:interpolator/decelerate_cubic" />
+        <objectAnimator android:propertyName="fillAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="0" android:valueTo="1" />
+        <objectAnimator android:propertyName="strokeAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="1" android:valueTo="0" />
+      </set>
+    </aapt:attrib>
+  </target>
+
+  <target android:name="ink2">
+    <aapt:attrib name="android:animation">
+      <set android:ordering="together">
+        <objectAnimator android:propertyName="trimPathEnd" android:duration="1050"
+            android:startOffset="830" android:valueFrom="0" android:valueTo="1"
+            android:interpolator="@android:interpolator/decelerate_cubic" />
+        <objectAnimator android:propertyName="fillAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="0" android:valueTo="1" />
+        <objectAnimator android:propertyName="strokeAlpha" android:duration="500"
+            android:startOffset="1900" android:valueFrom="1" android:valueTo="0" />
+      </set>
+    </aapt:attrib>
+  </target>
+
+</animated-vector>

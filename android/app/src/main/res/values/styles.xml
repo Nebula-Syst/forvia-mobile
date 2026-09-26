@@ -16,7 +16,12 @@
     </style>
 
 
+    <!-- SplashActivity's own theme — plain solid background (matching the web app's own
+         default bg, pure black) instead of the static @drawable/splash image: SplashActivity
+         now draws the real animated mark itself (ic_forvia_logo_animated.xml) rather than
+         showing a still image, so this only needs to cover the instant before that layout
+         inflates. -->
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <item name="android:background">@drawable/splash</item>
+        <item name="android:windowBackground">@android:color/black</item>
     </style>
 </resources>
