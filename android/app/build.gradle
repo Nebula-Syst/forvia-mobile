@@ -1,5 +1,20 @@
 apply plugin: 'com.android.application'
 
+// Release signing — a Play Store upload needs a *signed* AAB, unlike the debug APKs this repo
+// built until now. Never hardcoded: either a local, gitignored keystore.properties (for signing
+// a release build on your own machine) or RELEASE_STORE_FILE/RELEASE_STORE_PASSWORD/
+// RELEASE_KEY_ALIAS/RELEASE_KEY_PASSWORD env vars (what CI uses, from repo secrets — see
+// .github/workflows/build-apk.yml). Neither present: the release build type below just falls
+// back to signing with the debug key, same as every build before this, so `assembleDebug`/an
+// unconfigured local checkout are never broken by this.
+def keystoreProps = new Properties()
+def keystorePropsFile = rootProject.file('../keystore.properties')
+if (keystorePropsFile.exists()) {
+    keystoreProps.load(new FileInputStream(keystorePropsFile))
+}
+def releaseStoreFile = System.getenv('RELEASE_STORE_FILE') ?: keystoreProps['storeFile']
+def hasReleaseSigning = releaseStoreFile != null
+
 android {
     namespace "fit.forvia.app"
     compileSdk rootProject.ext.compileSdkVersion
@@ -16,10 +31,21 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (hasReleaseSigning) {
+            release {
+                storeFile file(releaseStoreFile)
+                storePassword System.getenv('RELEASE_STORE_PASSWORD') ?: keystoreProps['storePassword']
+                keyAlias System.getenv('RELEASE_KEY_ALIAS') ?: keystoreProps['keyAlias']
+                keyPassword System.getenv('RELEASE_KEY_PASSWORD') ?: keystoreProps['keyPassword']
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig hasReleaseSigning ? signingConfigs.release : signingConfigs.debug
         }
     }
 }
