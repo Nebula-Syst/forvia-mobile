@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  A quick fade-in for ic_splash_icon_vector.xml — this plays inside Android 12+'s own
+  SplashScreen slot (windowSplashScreenAnimatedIcon), which enforces its own short duration cap,
+  so this stays simple and brief on purpose: it only has to bridge the instant before
+  SplashActivity's own full animation (ic_forvia_logo_animated.xml) takes over.
+-->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:drawable="@drawable/ic_splash_icon_vector">
+
+  <target android:name="ink1">
+    <aapt:attrib name="android:animation">
+      <objectAnimator android:propertyName="fillAlpha" android:duration="450"
+          android:valueFrom="0" android:valueTo="1" />
+    </aapt:attrib>
+  </target>
+
+  <target android:name="ink2">
+    <aapt:attrib name="android:animation">
+      <objectAnimator android:propertyName="fillAlpha" android:duration="450"
+          android:startOffset="100" android:valueFrom="0" android:valueTo="1" />
+    </aapt:attrib>
+  </target>
+
+</animated-vector>

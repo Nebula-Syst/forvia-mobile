@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  API 31+ only: without this, Android's own SplashScreen system ignores our theme entirely and
+  shows its own default instead — the launcher icon (ic_launcher), boxed in the system's round/
+  square icon mask, on a plain grey window background. That default is what was showing up as
+  "the ugly logo on a black screen" even after SplashActivity was rewritten: an OS-owned screen
+  in front of it, not our layout at all. This makes the OS use our own icon and background
+  instead of its default, for the brief moment it owns before SplashActivity's own content
+  (values/styles.xml's plain black theme is what every other API level, and this same activity's
+  own post-splash state, uses) takes over the same "AppTheme.NoActionBarLaunch" theme name.
+-->
+<resources>
+    <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
+        <item name="android:windowSplashScreenBackground">@android:color/black</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_icon_animated</item>
+        <item name="android:windowSplashScreenAnimationDuration">450</item>
+        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
+    </style>
+</resources>

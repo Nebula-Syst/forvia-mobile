@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Just the "F" (ic_forvia_logo_vector.xml's ink1/ink2 paths, no side bars) — Android 12+'s own
+  SplashScreen API (windowSplashScreenAnimatedIcon, values-v31/styles.xml) masks whatever it's
+  given into a square/circular icon slot, and the full wide bars+F lockup doesn't fit that shape
+  without looking clipped. This is what plays in THAT system-owned slot, briefly, before
+  SplashActivity's own layout (the real, full animation) takes over.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="320dp"
+    android:height="313dp"
+    android:viewportWidth="320"
+    android:viewportHeight="313">
+  <group
+      android:translateY="313"
+      android:scaleX="0.1"
+      android:scaleY="-0.1">
+    <path
+        android:name="ink1"
+        android:pathData="M1130 2024 l-360 -357 0 -143 0 -144 48 0 47 1 338 334 339 335 416 0 417 0 158 158 c86 86 157 161 157 165 0 4 -270 7 -600 7 l-600 0 -360 -356z"
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0" />
+    <path
+        android:name="ink2"
+        android:pathData="M1377 1672 c-75 -75 -137 -139 -137 -142 0 -3 187 -6 416 -7 l417 -2 66 62 c126 117 221 212 221 219 0 5 -190 8 -423 8 l-422 0 -138 -138z"
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0" />
+  </group>
+</vector>
