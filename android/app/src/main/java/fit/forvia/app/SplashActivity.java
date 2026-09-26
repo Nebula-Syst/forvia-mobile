@@ -27,10 +27,11 @@ import androidx.core.splashscreen.SplashScreen;
 // call is a no-op shim; those OS versions never had this behaviour to begin with, so
 // activity_splash.xml's own layout (below) is already the very first thing shown there.
 //
-// 2400ms below matches ic_forvia_logo_animated.xml's own total duration (its last path's
-// fillAlpha animator ends at 1900+500ms) — change one, change the other.
+// 700ms below gives ic_forvia_logo_animated.xml's own fade (last path starts at 80ms, runs
+// 450ms — done by 530ms) a moment to actually settle before handing off — change one, sanity
+// check the other stays comfortably ahead of it.
 public class SplashActivity extends AppCompatActivity {
-    private static final long ANIMATION_DURATION_MS = 2400;
+    private static final long ANIMATION_DURATION_MS = 700;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
