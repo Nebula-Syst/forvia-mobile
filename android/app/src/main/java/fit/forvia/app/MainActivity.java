@@ -30,7 +30,7 @@ import com.getcapacitor.BridgeActivity;
 // someone behind a spinner that would otherwise never go away.
 public class MainActivity extends BridgeActivity {
     private static final int MIN_LOOPS = 2;
-    private static final long MAX_WAIT_MS = 20000;
+    private static final long MAX_WAIT_MS = 8000;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private View overlay;
