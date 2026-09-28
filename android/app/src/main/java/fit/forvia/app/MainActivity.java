@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.widget.ImageView;
 import com.getcapacitor.BridgeActivity;
 
@@ -73,6 +74,18 @@ public class MainActivity extends BridgeActivity {
     void onWebAppReady() {
         webReady = true;
         if (overlayDrawable == null || loopsPlayed >= MIN_LOOPS) hideOverlay();
+    }
+
+    // The session cookie (forvia-core's gymsid) is a normal persistent cookie (Max-Age set), so
+    // Android's CookieManager should write it to disk on its own — but that's a background,
+    // debounced sync, and Android is free to kill this process outright (low memory, swiped from
+    // recents) without ever giving it a graceful shutdown to finish that sync. Forcing a flush on
+    // every pause closes that window: worst case one extra disk write, best case it's the reason
+    // login didn't stick across a cold start.
+    @Override
+    public void onPause() {
+        super.onPause();
+        CookieManager.getInstance().flush();
     }
 
     private void hideOverlay() {
