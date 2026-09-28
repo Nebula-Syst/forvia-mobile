@@ -1,13 +1,16 @@
 package fit.forvia.app;
 
+import android.animation.ValueAnimator;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
+import android.view.ViewTreeObserver;
+import android.view.animation.LinearInterpolator;
 import android.webkit.CookieManager;
 import android.widget.ImageView;
 import com.getcapacitor.BridgeActivity;
@@ -17,17 +20,20 @@ import com.getcapacitor.BridgeActivity;
 // outlast SplashActivity's own brief animation — without this overlay, the gap between
 // SplashActivity finishing and the page actually painting something showed a blank black WebView
 // (its background, set below) with nothing on it for however long that takes. This overlays a
-// static logo, gently pulsing, on solid black on top of the WebView (added after it in the view
-// hierarchy, not replacing it — the page underneath keeps loading normally) until the web app
-// itself calls back through AppReadyPlugin (window.Capacitor.Plugins.AppReady.ready(), fired from
-// lib/mobile.js's notifyNativeReady() once real content — Home or Login — has actually rendered).
+// static logo — revealed left-to-right, repeatedly, like it's being drawn in — on solid black on
+// top of the WebView (added after it in the view hierarchy, not replacing it — the page underneath
+// keeps loading normally) until the web app itself calls back through AppReadyPlugin
+// (window.Capacitor.Plugins.AppReady.ready(), fired from lib/mobile.js's notifyNativeReady() once
+// real content — Home or Login — has actually rendered).
 //
-// A static PNG animated with the old View Animation framework (res/anim/pulse_loading.xml +
-// View.startAnimation) — not SplashActivity's AnimatedVectorDrawable/Animator: that exact class
-// reliably failed to ever render when added to this same overlay across several attempts
-// (confirmed on a real device, cause not pinned down without one to debug on directly — see git
-// log). The old Animation framework is a genuinely different, much simpler code path with no
-// start()/attach-timing/animator-callback machinery to go wrong the same way.
+// The reveal is a plain ValueAnimator driving View.setClipBounds — not an AnimatedVectorDrawable
+// (SplashActivity's own approach for its real stroke-by-stroke draw-in): that exact class reliably
+// failed to ever render when added to this same overlay across several attempts (confirmed on a
+// real device, cause not pinned down without one to debug on directly — see git log).
+// ValueAnimator+clipBounds is a completely different, much simpler code path (a plain Choreographer
+// callback updating one property) with none of that machinery to go wrong the same way — it can't
+// replicate the web's actual stroke-path reveal, but a growing reveal of the same mark reads as
+// "drawing itself in" too.
 //
 // Hides only once BOTH are true, so it never reads as a flash (MIN_DISPLAY_MS, in case the page
 // is ready almost instantly) or traps someone forever (MAX_WAIT_MS forces pageReady too, in case
@@ -58,8 +64,29 @@ public class MainActivity extends BridgeActivity {
         root.addView(overlay, new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        ImageView logo = overlay.findViewById(R.id.loading_logo);
-        logo.startAnimation(AnimationUtils.loadAnimation(this, R.anim.pulse_loading));
+        final ImageView logo = overlay.findViewById(R.id.loading_logo);
+        // Needs the view's real laid-out size for the clip rect, which isn't known yet on this
+        // same pass (just added to the tree) — a one-shot listener for the layout that follows.
+        logo.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                logo.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                startDrawReveal(logo);
+            }
+        });
+    }
+
+    private void startDrawReveal(ImageView logo) {
+        final int w = logo.getWidth();
+        final int h = logo.getHeight();
+        if (w <= 0 || h <= 0) return;
+        ValueAnimator anim = ValueAnimator.ofInt(0, w);
+        anim.setDuration(900);
+        anim.setInterpolator(new LinearInterpolator());
+        anim.setRepeatCount(ValueAnimator.INFINITE);
+        anim.setStartDelay(150);
+        anim.addUpdateListener(a -> logo.setClipBounds(new Rect(0, 0, (int) a.getAnimatedValue(), h)));
+        anim.start();
     }
 
     // Called (on the UI thread, via AppReadyPlugin) once the web app has real content on screen.
