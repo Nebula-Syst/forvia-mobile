@@ -66,7 +66,16 @@ public class MainActivity extends BridgeActivity {
                     else overlayDrawable.start();
                 }
             });
+            // Starting an AnimatedVectorDrawable synchronously in the same pass it's added to the
+            // view tree (unlike SplashActivity's own identical drawable, started from a normal
+            // setContentView — a real, established content view, not a view bolted on afterward)
+            // can silently no-op before the view has actually been attached/measured. Reported
+            // symptom this fixes: solid black overlay, logo never appears at all (fillAlpha's base
+            // state is 0 = invisible), the animation simply never started rather than playing
+            // badly. Calling start() both now and once more on the next frame (post) is belt and
+            // braces — a second start() on an already-running drawable is a harmless no-op.
             overlayDrawable.start();
+            overlay.post(overlayDrawable::start);
         }
     }
 
