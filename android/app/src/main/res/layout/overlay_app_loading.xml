@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MainActivity's loading overlay — added on top of the WebView and kept visible until the page
+     actually has something to show. A plain static PNG, confirmed rendering correctly on a real
+     device (unlike an AnimatedVectorDrawable added the same way, which never actually animated
+     here for reasons that couldn't be pinned down without a device to debug on — see git log).
+     Neutral/default-accent colouring is fine even for a user on a different accent: by the time
+     this fades out, index.html's own inline script has already applied their real theme/accent to
+     the page underneath, so the crossfade lands on already-correct colours, not another flash. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <ImageView
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_loading_logo" />
+
+</FrameLayout>
