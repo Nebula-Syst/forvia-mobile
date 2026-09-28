@@ -7,7 +7,9 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
+import android.widget.ImageView;
 import com.getcapacitor.BridgeActivity;
 
 // The WebView starts loading the live site the instant super.onCreate() below runs, but a cold
@@ -15,15 +17,17 @@ import com.getcapacitor.BridgeActivity;
 // outlast SplashActivity's own brief animation — without this overlay, the gap between
 // SplashActivity finishing and the page actually painting something showed a blank black WebView
 // (its background, set below) with nothing on it for however long that takes. This overlays a
-// plain static logo on solid black on top of the WebView (added after it in the view hierarchy,
-// not replacing it — the page underneath keeps loading normally) until the web app itself calls
-// back through AppReadyPlugin (window.Capacitor.Plugins.AppReady.ready(), fired from
+// static logo, gently pulsing, on solid black on top of the WebView (added after it in the view
+// hierarchy, not replacing it — the page underneath keeps loading normally) until the web app
+// itself calls back through AppReadyPlugin (window.Capacitor.Plugins.AppReady.ready(), fired from
 // lib/mobile.js's notifyNativeReady() once real content — Home or Login — has actually rendered).
 //
-// A static PNG, not SplashActivity's animated vector — that same drawable never actually animated
-// when added to a view this way (confirmed on a real device, cause not pinned down without one to
-// debug on directly — see git log). A static bitmap has no start()/attach-timing/callback path to
-// go wrong.
+// A static PNG animated with the old View Animation framework (res/anim/pulse_loading.xml +
+// View.startAnimation) — not SplashActivity's AnimatedVectorDrawable/Animator: that exact class
+// reliably failed to ever render when added to this same overlay across several attempts
+// (confirmed on a real device, cause not pinned down without one to debug on directly — see git
+// log). The old Animation framework is a genuinely different, much simpler code path with no
+// start()/attach-timing/animator-callback machinery to go wrong the same way.
 //
 // Hides only once BOTH are true, so it never reads as a flash (MIN_DISPLAY_MS, in case the page
 // is ready almost instantly) or traps someone forever (MAX_WAIT_MS forces pageReady too, in case
@@ -53,6 +57,9 @@ public class MainActivity extends BridgeActivity {
         ViewGroup root = findViewById(android.R.id.content);
         root.addView(overlay, new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        ImageView logo = overlay.findViewById(R.id.loading_logo);
+        logo.startAnimation(AnimationUtils.loadAnimation(this, R.anim.pulse_loading));
     }
 
     // Called (on the UI thread, via AppReadyPlugin) once the web app has real content on screen.

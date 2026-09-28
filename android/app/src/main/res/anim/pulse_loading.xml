@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A gentle breathing pulse on the loading logo — scale + fade, looping. Deliberately the old
+     View Animation framework (Animation/AnimationUtils.loadAnimation + View.startAnimation), not
+     an AnimatedVectorDrawable/Animator: that's the exact class that reliably failed to render at
+     all when added to this same overlay (see git log) — this is a different, much simpler, much
+     older API that has none of the same start()/attach-timing/callback machinery to go wrong. -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+    android:repeatMode="reverse"
+    android:repeatCount="infinite">
+    <scale
+        android:fromXScale="0.92" android:toXScale="1.0"
+        android:fromYScale="0.92" android:toYScale="1.0"
+        android:pivotX="50%" android:pivotY="50%"
+        android:duration="900" />
+    <alpha
+        android:fromAlpha="0.7" android:toAlpha="1.0"
+        android:duration="900" />
+</set>
