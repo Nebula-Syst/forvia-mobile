@@ -12,6 +12,11 @@ android/captures/
 android/.cxx/
 *.keystore
 *.jks
+# The debug keystore IS committed on purpose — see android/app/build.gradle's own comment on why
+# a fixed, shared debug key matters here (consecutive sideloaded builds need matching signatures
+# to install as updates instead of forcing an uninstall). Nothing secret in it: fixed, well-known
+# passwords, debug-only, never used for anything Play Store cares about.
+!android/app/debug.keystore
 keystore.properties
 
 .DS_Store

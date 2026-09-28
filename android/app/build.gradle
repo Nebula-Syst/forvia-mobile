@@ -32,6 +32,18 @@ android {
         }
     }
     signingConfigs {
+        // A fixed, checked-in debug keystore instead of Gradle's own implicit default (which
+        // auto-generates ~/.android/debug.keystore with random key material the first time it's
+        // needed on a machine). CI runners are fresh VMs with no such file lying around, so every
+        // build used to get its OWN random debug key — meaning Android refused every "update"
+        // over a previous sideload as a signature mismatch, forcing an uninstall (wiping the
+        // WebView's session/local storage) to install the new one. Same key every time fixes that.
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
         if (hasReleaseSigning) {
             release {
                 storeFile file(releaseStoreFile)
@@ -42,6 +54,9 @@ android {
         }
     }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

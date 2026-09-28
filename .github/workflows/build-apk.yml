@@ -19,6 +19,11 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # `secrets` isn't a recognized value inside `if:` conditions (GitHub rejects the whole
+    # workflow file for it, not just the step — this silently broke every build for two days).
+    # Stash the presence check in a job-level env var instead; `env` *is* usable in `if:`.
+    env:
+      HAS_RELEASE_SIGNING: ${{ secrets.RELEASE_KEYSTORE_BASE64 != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -72,13 +77,13 @@ jobs:
       # above, same as every build before this. Play Store submissions need this signed .aab
       # specifically — it will never accept the debug-signed APK.
       - name: Decode release keystore
-        if: ${{ secrets.RELEASE_KEYSTORE_BASE64 != '' }}
+        if: ${{ env.HAS_RELEASE_SIGNING == 'true' }}
         run: |
           echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/release.keystore"
           echo "RELEASE_STORE_FILE=$RUNNER_TEMP/release.keystore" >> "$GITHUB_ENV"
 
       - name: Build signed release AAB (Play Store upload)
-        if: ${{ secrets.RELEASE_KEYSTORE_BASE64 != '' }}
+        if: ${{ env.HAS_RELEASE_SIGNING == 'true' }}
         working-directory: android
         env:
           RELEASE_STORE_FILE: ${{ env.RELEASE_STORE_FILE }}
@@ -88,7 +93,7 @@ jobs:
         run: ./gradlew bundleRelease --no-daemon
 
       - name: Rename AAB
-        if: ${{ secrets.RELEASE_KEYSTORE_BASE64 != '' }}
+        if: ${{ env.HAS_RELEASE_SIGNING == 'true' }}
         run: cp android/app/build/outputs/bundle/release/app-release.aab "dist/forvia-${{ steps.version.outputs.version }}.aab"
 
       - name: Publish GitHub Release
