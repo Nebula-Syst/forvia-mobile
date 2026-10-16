@@ -4,9 +4,8 @@
     <string name="title_activity_main">Forvia</string>
     <string name="package_name">fit.forvia.app</string>
     <string name="custom_url_scheme">fit.forvia.app</string>
-    <!-- Google's own published SAMPLE app id — swap for the real one once an AdMob account
-         exists for this app (Google's "Get an app ID" docs). The ads feature stays dormant on
-         any build until GET /api/config (forvia-core) actually reports a real ad unit id, so
-         this placeholder being live here doesn't mean ads are live. -->
-    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <!-- Real AdMob app id (Nebula Systems' own AdMob account). The ads feature still stays
+         dormant on any build until GET /api/config (forvia-core) actually reports a real
+         rewarded ad unit id, so this alone being live here doesn't mean ads are live. -->
+    <string name="admob_app_id">ca-app-pub-3943318045190530~2353409517</string>
 </resources>
