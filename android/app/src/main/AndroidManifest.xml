@@ -29,6 +29,16 @@
             android:exported="false">
         </activity>
 
+        <!-- Required by the AdMob SDK itself (crashes on boot without it) — not optional, so
+             this stays in place even on a self-hosted instance that's never configured a real
+             AdMob account: lib/mobile.js's initAds()/watchRewardedAd() just never get called
+             without a real ad unit id from GET /api/config, so the SDK sits there unused.
+             @string/admob_app_id (res/values/strings.xml) holds Google's own published SAMPLE
+             app id for now — swap it there for the real one once an AdMob account exists. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/admob_app_id" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
